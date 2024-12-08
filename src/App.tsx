@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RentForm } from "./components/RentForm";
 import { RentDetails } from "./types/receipt";
 
@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { GithubIcon, LinkedinIcon, TwitterIcon } from "lucide-react";
 import RentPreview from "./components/RentPreview";
 import { RentReceipt } from "./components/RentReceipt";
+import { cn } from "./lib/utils";
 
 function App() {
   const [rentDetails, setRentDetails] = useState<RentDetails | null>(null);
@@ -18,6 +19,33 @@ function App() {
       setRentDetails(data);
     }
   };
+
+  // logic to generate rent details/ preview details from query params
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const totalRent = urlParams.get("totalRent");
+    const tenants = urlParams.get("tenants");
+    const propertyAddress = urlParams.get("propertyAddress");
+    const landlordName = urlParams.get("landlordName");
+    const startDate = urlParams.get("startDate");
+    const numberOfMonths = urlParams.get("numberOfMonths");
+    const landlordPan = urlParams.get("landlordPan");
+
+    if (totalRent) {
+      const data: RentDetails = {
+        totalRent: Number(totalRent),
+        tenants: JSON.parse(tenants || "[]"),
+        propertyAddress: propertyAddress || "",
+        landlordName: landlordName || "",
+        startDate: startDate || "",
+        numberOfMonths: Number(numberOfMonths),
+        landlordPan: landlordPan || "",
+        signature: "",
+      };
+
+      setPreviewData(data);
+    }
+  }, []);
 
   return (
     <div className="mx-auto bg-slate-100">
@@ -56,7 +84,7 @@ function App() {
         </div>
       </div>
       <div className="w-5/6 mx-auto pb-12">
-        <div className="grid grid-cols-2 gap-2">
+        <div className="md:grid md:grid-cols-2 gap-2">
           <div className="col-span-1">
             <RentForm
               hasPreview={!!previewData}
@@ -65,7 +93,12 @@ function App() {
             />
           </div>
           <div
-            className="col-span-1 px-8 rounded-sm justify-center items-center flex"
+            className={cn(
+              "col-span-1 px-8 rounded-sm",
+              previewData && !rentDetails && "justify-center items-center flex",
+              rentDetails && "pt-12",
+              !previewData && "justify-center items-center flex"
+            )}
             style={{
               background: "url(../preview-bg.jpg)",
               backgroundSize: "cover",
@@ -77,7 +110,7 @@ function App() {
               )}
 
               {!previewData && (
-                <div className="text-center">
+                <div className="text-center p-4">
                   <h2 className="text-lg font-bold">Preview</h2>
                   <p className="text-sm text-gray-500">
                     Fill the form to generate a rent receipt
@@ -86,7 +119,7 @@ function App() {
               )}
 
               {rentDetails && (
-                <div className="text-center">
+                <div className="text-center w-full">
                   <h2 className="text-lg font-bold">Rent Receipt</h2>
                   <p className="text-sm text-gray-500">
                     Your rent receipt is ready to download

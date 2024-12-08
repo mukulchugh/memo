@@ -88,7 +88,7 @@ export const RentReceipt: React.FC<RentReceiptProps> = ({ data }) => {
   }
 
   return (
-    <PDFViewer style={{ width: "100%", height: "600px" }}>
+    <PDFViewer style={{ width: "100%", height: "800px" }}>
       <Document>
         {pages.map((pageReceipts, pageIndex) => (
           <Page key={pageIndex} size="A4" style={styles.page}>
