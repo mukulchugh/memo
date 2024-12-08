@@ -6,7 +6,7 @@ Memo is a simple and efficient rent receipt generator app designed to help landl
 
 ## Preview
 
-![App Screenshot](https://github.com/mukul/memo/raw/main/screenshot.png)
+![App Screenshot](https://github.com/mukulchugh/memo/blob/main/memo-screenshot.jpg?raw=true)
 
 ## Features
 
